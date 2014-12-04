@@ -1,0 +1,44 @@
+public class Order 
+{
+    
+    private int pizzaCount;
+    private Pizza pizzaArray[] = new Pizza[30]; 
+    private int orderPosition;
+    
+    public Order()
+    {
+        this.pizzaCount = 0;
+        this.orderPosition = 0;
+    }
+    
+    public void addPizza(int Size, boolean Anchovies, boolean Pepperoni, boolean Sausage, boolean ItalianSausage, boolean BlackOlives, 
+            boolean Mushrooms, boolean Onions, boolean RoastedPeppers)
+    {
+        this.pizzaArray[orderPosition++] = new Pizza(Size, Anchovies, Pepperoni, Sausage, ItalianSausage, BlackOlives, Mushrooms, Onions, RoastedPeppers);
+    }
+    
+    public String orderSummary()
+    {
+        String orderSum = "- Completed Order: -";
+        for(int i = 0; this.pizzaArray[i] != null; i++)
+        {
+            orderSum = "" + orderSum + "\n" + (i+1) + "- "+ this.pizzaArray[i].pizzaString() + ". Priced @ $"+this.pizzaArray[i].getPrice() + ".";
+        }
+        return orderSum;
+    }
+    
+    public Double orderTotal()
+    {
+        Double total = 0.0;
+        for(int i = 0; this.pizzaArray[i] != null; i++)
+        {
+            total = total + this.pizzaArray[i].getPrice();
+        }
+        
+        total = Math.round((total + (total * 0.0795))*100.0) / 100.0;
+        
+        return total;
+    }
+    
+    
+}
