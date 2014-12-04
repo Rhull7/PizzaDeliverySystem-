@@ -1,0 +1,82 @@
+public class Pizza {
+    
+    private boolean anchovies;
+    private boolean pepperoni;
+    private boolean sausage;
+    private boolean italianSausage;
+    
+    private boolean blackOlives;
+    private boolean mushrooms;
+    private boolean onions;
+    private boolean roastedPeppers;
+    
+    private int size;
+    
+    
+    public Pizza(int Size, boolean Anchovies, boolean Pepperoni, boolean Sausage, boolean ItalianSausage, boolean BlackOlives, 
+            boolean Mushrooms, boolean Onions, boolean RoastedPeppers)
+    {
+        this.size = Size;
+        this.anchovies = Anchovies;
+        this.pepperoni = Pepperoni;
+        this.sausage = Sausage;
+        this.italianSausage = ItalianSausage;
+        this.blackOlives = BlackOlives;
+        this.mushrooms = Mushrooms;
+        this.onions = Onions;
+        this.roastedPeppers = RoastedPeppers;
+    }
+    
+    public String pizzaString()
+    {
+        String pizza ;
+        String sizeString;
+        String anch = "";
+        String pepp = "";
+        String saus = "";
+        String ita = "";
+        String black = "";
+        String mush = "";
+        String oni= "";
+        String roas = "";
+        
+        if (this.size == 1) sizeString = "Small";
+        else if (this.size == 2) sizeString = "Medium";
+        else sizeString = "Large";
+        
+        if (this.anchovies) anch = ", anchovies";
+        if (this.pepperoni) pepp = ", pepperoni";
+        if (this.sausage) saus = ", sausage";
+        if (this.italianSausage) ita = ", italian sausage";
+        if (this.blackOlives) black = ", black olives";
+        if (this.mushrooms) mush = ", mushrooms";
+        if (this.onions) oni = ", onions";
+        if (this.roastedPeppers) roas = ", roasted peppers";
+        
+        
+        pizza = ""+sizeString+" pizza with toppings"+anch+pepp+saus+ita+black+mush+oni+roas;
+        
+        return pizza;
+    }
+    
+    public double getPrice()
+    {
+        double price ;
+        
+        if (this.size == 1) price = 4;
+        else if (this.size == 2) price = 6;
+        else price = 8;
+        
+        if (this.anchovies) price++;
+        if (this.pepperoni) price++;
+        if (this.sausage) price++;
+        if (this.italianSausage) price++;
+        if (this.blackOlives) price++;
+        if (this.mushrooms) price++;
+        if (this.onions) price++;
+        if (this.roastedPeppers) price++;
+        
+        
+        return price;
+    }
+}
