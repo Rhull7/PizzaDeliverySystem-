@@ -20,10 +20,15 @@
 *
 *
 ********************************************************/
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-public class HashMapDatabase {
+public class HashMapDatabase implements Serializable{
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4014487096874213378L;
 //Fields used
 private static Customer cust = new Customer();
 private static HashMap<String, Customer> map = new HashMap<String, Customer>();
@@ -40,13 +45,13 @@ public void put(String phoneNumber, Customer C)
 	map.put(phoneNumber, C);
 }
 
-public Entry<String, Customer> get(String phoneNumber)
+public Customer get(String phoneNumber)
 {
 	for(Map.Entry<String, Customer> entry: map.entrySet()) 
 	{
 		if(phoneNumber.equals(entry.getKey()))
 		{
-			return entry;
+			return entry.getValue();
 		}
 	}//end for each loop
 	return null;
@@ -65,11 +70,5 @@ public static void iterateThroughMap()
 		System.out.println(phoneNumber + ":\n\n" + custInfo);
 	}//end for each loop
 }//end iterateThroughMap
-public static void main(String[] args)
-{
-	HashMapDatabase H = new HashMapDatabase();
-	Customer C = new Customer("18006642590", "Seth", "Utah", "");
-	H.put(C.getPhoneNumber(), C);
-	System.out.println((H.get("18006642590")).getKey());
-}
 }//end HashMapDatabase.java
+
