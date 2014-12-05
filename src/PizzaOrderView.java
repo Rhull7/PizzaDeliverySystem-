@@ -19,10 +19,13 @@ import java.awt.Toolkit;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
+
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 
 @SuppressWarnings("serial")
@@ -58,6 +61,9 @@ public class PizzaOrderView extends JFrame
 	JButton clear;
 	JTextField instructionsField1;
 	JScrollPane Scroll2;
+	ButtonGroup B1;
+	Order O;
+	Customer U;
 	
 	public PizzaOrderView()
 	{
@@ -79,7 +85,7 @@ public class PizzaOrderView extends JFrame
 		Border Raised = BorderFactory.createTitledBorder(raisedBorder, "Guido's Pizzeria", TitledBorder.TOP, TitledBorder.CENTER, font, Color.RED);
 		contentPane.setBorder(Raised);
 		setContentPane(contentPane);
-		ButtonGroup B1 = new ButtonGroup();
+		B1 = new ButtonGroup();
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 		GridLayout G = new GridLayout(1, 2, 10, 10);
 		
@@ -218,9 +224,11 @@ public class PizzaOrderView extends JFrame
 		orderButtonsPanel.setLayout(new GridLayout(1, 2, 10, 10));
 		addToOrderButton = new JButton("Add pizza to this order");
 		addToOrderButton.setEnabled(false);
+		addToOrderButton.addActionListener(new addButtonListener());
 		orderButtonsPanel.add(addToOrderButton);
 		totalTheOrderButton = new JButton("Total this order");
 		totalTheOrderButton.setEnabled(false);
+		totalTheOrderButton.addActionListener(new TotalButtonListener());
 		orderButtonsPanel.add(totalTheOrderButton);
 		orderButtonsPanel.setOpaque(false);
 		orderPanel.add(orderButtonsPanel);
@@ -233,7 +241,7 @@ public class PizzaOrderView extends JFrame
 		orderSummaryField = new JTextField();
 		orderSummaryField.setPreferredSize(new Dimension(1000, 40));
 		Scroll = new JScrollPane(orderSummaryField);
-		Scroll.setPreferredSize(new Dimension(300, 70));
+		Scroll.setPreferredSize(new Dimension(500, 70));
 		Scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		orderSummaryPanel.setOpaque(false);
 		orderSummaryPanel.add(Scroll);
@@ -246,6 +254,7 @@ public class PizzaOrderView extends JFrame
 		finishUpPanel.setBorder(BorderFactory.createTitledBorder("Finish the Order:"));
 		submit = new JButton("Submit");
 		submit.setEnabled(false);
+		submit.addActionListener(new SubmitListener());
 		clear = new JButton("Clear");
 		clear.addActionListener(new ClearListener());
 		finishUpPanel.add(submit);
@@ -273,6 +282,11 @@ public class PizzaOrderView extends JFrame
 		public void actionPerformed(ActionEvent e)
 		{
 			String phoneN = phoneField.getText();
+			if(phoneN.equals(""))
+			{
+				
+			}
+			
 			if(Pizza.find(phoneN) == null)
 			{
 				orderSummaryField.setText("Customer not found");
@@ -281,7 +295,9 @@ public class PizzaOrderView extends JFrame
 			}
 			else
 			{
+				U = Pizza.find(phoneN);
 				orderSummaryField.setText("Customer found");
+				instructionsField1.setText(U.getInstructions());
 				update.setEnabled(true);
 				addToOrderButton.setEnabled(true);
 			}
@@ -312,8 +328,9 @@ public class PizzaOrderView extends JFrame
 				String phoneN = phoneField.getText();
 				Customer N = new Customer(phoneN, Name, address, instructions);
 				Pizza.add(N);
-				Pizza.shutdown();
+				U = N;
 				orderSummaryField.setText("");
+				instructionsField1.setText(instructionsField.getText());
 				
 				if(addToOrderButton.isEnabled() == false)
 				{
@@ -352,6 +369,82 @@ public class PizzaOrderView extends JFrame
 			Large.setSelected(true);
 			orderSummaryField.setText("");
 			instructionsField1.setText("");
+		}
+	}
+	
+	private class addButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			if(totalTheOrderButton.isEnabled() == false)
+			{
+				O = new Order(U, new Date());
+				int R = 0;
+				if(Large.isSelected())
+				{
+					R = 3;
+				}
+				else if(Med.isSelected())
+				{
+					R = 2;
+				}
+				else
+				{
+					R = 1;
+				}
+				O.addPizza(R, An.isSelected(), Pep.isSelected(), S.isSelected(), It.isSelected(), Black.isSelected(), M.isSelected(), On.isSelected(), RP.isSelected());
+				if(orderSummaryField.getText().length() >= orderSummaryField.getWidth()- 200)
+				{
+					orderSummaryField.setSize(orderSummaryField.getWidth()*2, orderSummaryField.getHeight());
+				}
+				totalTheOrderButton.setEnabled(true);
+				orderSummaryField.setText(O.orderSummary());
+			}
+			else
+			{
+				int R = 0;
+				if(Large.isSelected())
+				{
+					R = 3;
+				}
+				else if(Med.isSelected())
+				{
+					R = 2;
+				}
+				else
+				{
+					R = 1;
+				}
+				O.addPizza(R, An.isSelected(), Pep.isSelected(), S.isSelected(), It.isSelected(), Black.isSelected(), M.isSelected(), On.isSelected(), RP.isSelected());
+				if(orderSummaryField.getText().length() >= orderSummaryField.getWidth()- 200)
+				{
+					orderSummaryField.setSize(orderSummaryField.getWidth()*2, orderSummaryField.getHeight());
+				}
+				orderSummaryField.setText(O.orderSummary());
+			}
+		}
+	}
+	
+	private class TotalButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			orderSummaryField.setText("The total is $" + O.orderTotal());
+			addToOrderButton.setEnabled(false);
+			totalTheOrderButton.setEnabled(false);
+			submit.setEnabled(true);
+		}
+	}
+	
+	private class SubmitListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			Pizza.add(O);
+			orderSummaryField.setText("Order submitted");
+			update.setEnabled(true);
+			submit.setEnabled(false);
+			Pizza.shutdown();
 		}
 	}
 
