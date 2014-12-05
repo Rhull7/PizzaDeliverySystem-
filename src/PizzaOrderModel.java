@@ -1,16 +1,9 @@
 package pds;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Map;
-
+import java.io.*;
 /**
- * Home Delivery Pizza System: Solution to Focus on Problem Solving Section for
- * Chapter 12.
- */
+* Home Delivery Pizza System: Solution to Focus on
+* Problem Solving Section for Chapter 12.
+*/
 public class PizzaOrderModel 
 {
 	private HashMapDatabase customerDB;
