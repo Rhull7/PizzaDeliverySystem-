@@ -1,5 +1,9 @@
 package pds;
 import java.io.*;
+import java.util.Map;
+import java.util.Scanner;
+
+
 /**
 * Home Delivery Pizza System: Solution to Focus on
 * Problem Solving Section for Chapter 12.
@@ -9,7 +13,7 @@ public class PizzaOrderModel
 	private HashMapDatabase customerDB;
 	private ListQueue<Order> orders;
 	private boolean customerDBModified;
-	private String customerDBfilename = new String( "src/Pizza/customers.dat" );
+	private String customerDBfilename = new String( "customers.txt" );
 /**
 * Constructor - initialize the model to handle orders.
 */
@@ -63,48 +67,69 @@ public class PizzaOrderModel
 			throw new IllegalArgumentException();
 		return customerDB.get( phoneNumber );
 	}
+	
+	public void remove( String phoneNumber )
+	{
+		if ( phoneNumber == null )
+			throw new IllegalArgumentException();
+		customerDB.remove(phoneNumber);
+	}
 /**
 * Shutdown the model. This gives the model a chance to save
 * the customer database if it was modified.
 */	
 	public void shutdown()
 	{
-		if ( this.customerDBModified )
+		if( this.customerDBModified )
+		{
 			saveCustomerDB( customerDBfilename );
-		customerDBModified = false;
+		}
 	}
 	private void loadCustomerDB( String filename )
 	{
-		try
-		{
-			FileInputStream fiStream = new FileInputStream( filename );
-			ObjectInputStream oiStream = new ObjectInputStream( fiStream );
-			this.customerDB = (HashMapDatabase)(oiStream.readObject());
-			oiStream.close();
-		} 
-		catch ( FileNotFoundException fnfe ) 
-		{
-			this.customerDB = new HashMapDatabase();
-		} 
-		catch( Exception e ) 
-		{
-			System.out.println( "Error during input: " + e.toString());
-		}
+			try (Scanner input = new Scanner(new File(filename)))
+			{
+				while (input.hasNextLine())
+				{
+					String PhoneN = input.nextLine();
+					String Name = input.nextLine();
+					String Address = input.nextLine();
+					String I = input.nextLine();
+					
+					Customer cust = new Customer(PhoneN, Name, Address, I);
+					customerDB.put(cust.getPhoneNumber(), cust);
+				}
+			} 
+			catch (FileNotFoundException e) 
+			{
+				System.out.println("File not found.");
+			}
 }
 
 	private void saveCustomerDB( String filename )
 	{
-		try
+		PrintWriter writer;
+		try 
 		{
-			FileOutputStream foStream = new FileOutputStream( filename ) ;
-			ObjectOutputStream ooStream = new ObjectOutputStream( foStream );
-			ooStream.writeObject( this.customerDB );
-			ooStream.flush();
-			ooStream.close();
+			writer = new PrintWriter( filename, "UTF-8" );
+			for(Map.Entry<String, Customer> entry: customerDB.getMap().entrySet()) 
+			{
+				writer.println(entry.getValue().getPhoneNumber());
+				writer.println(entry.getValue().getName());
+				writer.println(entry.getValue().getAddress());
+				writer.println(entry.getValue().getInstructions());
+				
+			}//end for each loop
+			writer.close();
 		} 
-		catch ( Exception e ) 
+		catch (FileNotFoundException e) 
 		{
-			System.out.println( "Error during output: " + e.toString());
+			e.printStackTrace();
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			e.printStackTrace();
 		}
+				
 	}
 }
