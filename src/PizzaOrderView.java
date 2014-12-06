@@ -70,7 +70,6 @@ public class PizzaOrderView extends JFrame
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Guido's Pizza");
 		
-		
 		Border raisedBorder = BorderFactory.createEmptyBorder(0, 2, 2, 2);
 		Font font = new Font("Verdana", Font.ITALIC, 50);
 		JPanel contentPane = new JPanel() 
@@ -286,8 +285,7 @@ public class PizzaOrderView extends JFrame
 			{
 				
 			}
-			
-			if(Pizza.find(phoneN) == null)
+			else if(Pizza.find(phoneN) == null)
 			{
 				orderSummaryField.setText("Customer not found");
 				phoneButton.setEnabled(false);
@@ -326,16 +324,24 @@ public class PizzaOrderView extends JFrame
 				String address = addressField.getText();
 				String instructions = instructionsField.getText();
 				String phoneN = phoneField.getText();
-				Customer N = new Customer(phoneN, Name, address, instructions);
-				Pizza.add(N);
-				U = N;
-				orderSummaryField.setText("");
-				instructionsField1.setText(instructionsField.getText());
 				
 				if(addToOrderButton.isEnabled() == false)
 				{
+					Customer N = new Customer(phoneN, Name, address, instructions);
+					Pizza.add(N);
+					U = N;
+					orderSummaryField.setText("");
+					instructionsField1.setText(instructionsField.getText());
 					addToOrderButton.setEnabled(true);
-					
+				}
+				else
+				{
+					Pizza.remove(phoneN);
+					Customer N = new Customer(phoneN, Name, address, instructions);
+					Pizza.add(N);
+					U = N;
+					orderSummaryField.setText("");
+					instructionsField1.setText(instructionsField.getText());
 				}
 				
 			}
@@ -349,7 +355,6 @@ public class PizzaOrderView extends JFrame
 			addToOrderButton.setEnabled(false);
 			totalTheOrderButton.setEnabled(false);
 			submit.setEnabled(false);
-			clear.setEnabled(false);
 			update.setEnabled(false);
 			phoneButton.setEnabled(true);
 		    phoneField.setText("");
@@ -442,7 +447,7 @@ public class PizzaOrderView extends JFrame
 		{
 			Pizza.add(O);
 			orderSummaryField.setText("Order submitted");
-			update.setEnabled(true);
+			update.setEnabled(false);
 			submit.setEnabled(false);
 			Pizza.shutdown();
 		}
