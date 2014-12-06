@@ -40,6 +40,11 @@ public static void setHashMap()
 	map.put(cust.getPhoneNumber(), cust);
 }//end setHashMap
 
+public HashMap<String, Customer> getMap()
+{
+	return map;
+}
+
 public void put(String phoneNumber, Customer C)
 {
 	map.put(phoneNumber, C);
@@ -47,15 +52,19 @@ public void put(String phoneNumber, Customer C)
 
 public Customer get(String phoneNumber)
 {
-	for(Map.Entry<String, Customer> entry: map.entrySet()) 
+	if(map.containsKey(phoneNumber))
 	{
-		if(phoneNumber.equals(entry.getKey()))
-		{
-			return entry.getValue();
-		}
-	}//end for each loop
+		return map.get(phoneNumber);
+	}
+	
 	return null;
 }
+
+public void remove(String phoneNumber)
+{
+	map.remove(phoneNumber);
+}
+}//end HashMapDatabase.java
 
 /**
 * iterateThroughMap is used to print out
